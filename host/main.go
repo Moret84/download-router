@@ -8,6 +8,7 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 )
@@ -81,7 +82,25 @@ func handle(msg request, cfg Config) response {
 	}
 }
 
+// main dispatches the install/uninstall subcommands. Any other invocation runs
+// the native messaging loop: Firefox launches the host with its own arguments
+// (the manifest path, and the extension id on Windows), so only the explicit
+// "install"/"uninstall" verbs are treated as subcommands.
 func main() {
+	if len(os.Args) > 1 {
+		switch os.Args[1] {
+		case "install":
+			exitOnError(runInstall(hasFlag("--system")))
+			return
+		case "uninstall":
+			exitOnError(runUninstall(hasFlag("--system")))
+			return
+		}
+	}
+	runHost()
+}
+
+func runHost() {
 	cfg, err := loadConfig()
 	if err != nil {
 		// Without a valid allowlist we cannot validate destinations safely.
@@ -100,5 +119,21 @@ func main() {
 		if err := writeMessage(os.Stdout, handle(msg, cfg)); err != nil {
 			return
 		}
+	}
+}
+
+func hasFlag(name string) bool {
+	for _, arg := range os.Args[2:] {
+		if arg == name {
+			return true
+		}
+	}
+	return false
+}
+
+func exitOnError(err error) {
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 }

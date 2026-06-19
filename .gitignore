@@ -6,3 +6,4 @@ dist/
 # Go native helper build output
 /host/bin/
 /host/download-router-host
+/host/config.json
