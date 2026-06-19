@@ -1,0 +1,17 @@
+{
+  "name": "download-router-firefox",
+  "version": "0.1.0",
+  "description": "Firefox extension that routes downloads into subfolders based on user-defined rules.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node build.ts",
+    "watch": "node build.ts --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/firefox-webext-browser": "^120.0.4",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.3"
+  }
+}
