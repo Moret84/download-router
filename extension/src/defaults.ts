@@ -9,7 +9,7 @@ export function createDefaultRules(): Rule[] {
       priority: 10,
       domain: "github.com",
       urlRegex: "/releases/",
-      destination: "GitHub/Releases",
+      destination: "~/Downloads/GitHub/Releases",
     },
     {
       id: crypto.randomUUID(),
@@ -17,7 +17,7 @@ export function createDefaultRules(): Rule[] {
       enabled: true,
       priority: 20,
       extension: "pdf",
-      destination: "PDF",
+      destination: "~/Downloads/PDF",
     },
     {
       id: crypto.randomUUID(),
@@ -25,7 +25,7 @@ export function createDefaultRules(): Rule[] {
       enabled: true,
       priority: 30,
       extension: "jpg|jpeg|png|webp",
-      destination: "Images",
+      destination: "~/Downloads/Images",
     },
     {
       id: crypto.randomUUID(),
@@ -33,7 +33,7 @@ export function createDefaultRules(): Rule[] {
       enabled: true,
       priority: 40,
       extension: "zip|tar.gz|7z",
-      destination: "Archives",
+      destination: "~/Downloads/Archives",
     },
     {
       id: crypto.randomUUID(),
@@ -41,7 +41,7 @@ export function createDefaultRules(): Rule[] {
       enabled: true,
       priority: 50,
       extension: "dmg|exe|msi|apk",
-      destination: "Installers",
+      destination: "~/Downloads/Installers",
     },
   ];
 }
