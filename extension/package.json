@@ -7,11 +7,14 @@
   "scripts": {
     "build": "node build.ts",
     "watch": "node build.ts --watch",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "web-ext lint --source-dir dist",
+    "package": "web-ext build --source-dir dist --artifacts-dir web-ext-artifacts --overwrite-dest"
   },
   "devDependencies": {
     "@types/firefox-webext-browser": "^120.0.4",
     "esbuild": "^0.24.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "web-ext": "^8.3.0"
   }
 }

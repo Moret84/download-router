@@ -6,7 +6,10 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "download-router@bosscorp.fr",
-      "strict_min_version": "115.0"
+      "strict_min_version": "115.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   },
   "permissions": ["downloads", "storage", "nativeMessaging"],
