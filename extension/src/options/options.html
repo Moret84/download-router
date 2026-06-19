@@ -16,9 +16,15 @@
       <section id="rules-section">
         <div class="section-header">
           <h2>Rules</h2>
-          <button type="button" id="add-rule">Add rule</button>
+          <div class="header-actions">
+            <button type="button" id="add-rule">Add rule</button>
+            <button type="button" id="export-rules" class="secondary">Export</button>
+            <button type="button" id="import-rules" class="secondary">Import</button>
+            <input type="file" id="import-file" accept="application/json" hidden />
+          </div>
         </div>
         <p class="hint">Rules are evaluated by priority (lowest first). The first match wins.</p>
+        <p id="import-error" class="error" hidden></p>
         <table id="rules-table">
           <thead>
             <tr>
@@ -71,7 +77,17 @@
           </fieldset>
           <div class="field">
             <label for="rule-destination">Destination</label>
-            <input type="text" id="rule-destination" required placeholder="GitHub/Releases" />
+            <input
+              type="text"
+              id="rule-destination"
+              required
+              placeholder="~/Downloads/GitHub/Releases"
+            />
+            <span class="hint">
+              Absolute or ~ path. Variables: {domain} {filename} {extension}
+              {year} {month} — e.g. <code>~/Documents/Sites/{domain}</code> or
+              <code>~/Downloads/Archives/{year}/{month}</code>
+            </span>
           </div>
           <p id="form-error" class="error" hidden></p>
           <div class="form-actions">

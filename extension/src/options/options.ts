@@ -1,4 +1,5 @@
 import { buildDestination, findMatchingRule } from "../matcher";
+import { parseRulesFile, serializeRules } from "../rules-io";
 import {
   clearHistory,
   getHistory,
@@ -20,6 +21,10 @@ const elements = {
   rulesBody: byId<HTMLTableSectionElement>("rules-body"),
   rulesEmpty: byId<HTMLParagraphElement>("rules-empty"),
   addRule: byId<HTMLButtonElement>("add-rule"),
+  exportRules: byId<HTMLButtonElement>("export-rules"),
+  importRules: byId<HTMLButtonElement>("import-rules"),
+  importFile: byId<HTMLInputElement>("import-file"),
+  importError: byId<HTMLParagraphElement>("import-error"),
   formSection: byId<HTMLElement>("form-section"),
   formTitle: byId<HTMLHeadingElement>("form-title"),
   form: byId<HTMLFormElement>("rule-form"),
@@ -266,7 +271,11 @@ function runTest(): void {
     return;
   }
 
-  const destination = buildDestination(rule.destination, input.filename);
+  const destination = buildDestination(rule.destination, {
+    url: input.url,
+    filename: input.filename,
+    now: new Date(),
+  });
   elements.testResult.className = "result matched";
   const matched = document.createElement("div");
   matched.textContent = `Matched rule: ${rule.name}`;
@@ -306,6 +315,39 @@ async function refreshHistory(): Promise<void> {
   renderHistoryEntries(await getHistory());
 }
 
+function exportRules(): void {
+  const blob = new Blob([serializeRules(rules)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = "download-router-rules.json";
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
+async function importRulesFromFile(file: File): Promise<void> {
+  elements.importError.hidden = true;
+  try {
+    rules = parseRulesFile(await file.text());
+  } catch (error) {
+    elements.importError.textContent =
+      error instanceof Error ? error.message : "Could not import rules.";
+    elements.importError.hidden = false;
+    return;
+  }
+
+  await saveRules(rules);
+  renderRules();
+}
+
+function handleImportSelection(): void {
+  const file = elements.importFile.files?.[0];
+  if (file) {
+    void importRulesFromFile(file);
+  }
+  elements.importFile.value = "";
+}
+
 async function init(): Promise<void> {
   await seedDefaultRulesIfEmpty();
   rules = await getRules();
@@ -313,6 +355,9 @@ async function init(): Promise<void> {
   await refreshHistory();
 
   elements.addRule.addEventListener("click", () => openForm());
+  elements.exportRules.addEventListener("click", exportRules);
+  elements.importRules.addEventListener("click", () => elements.importFile.click());
+  elements.importFile.addEventListener("change", handleImportSelection);
   elements.cancelForm.addEventListener("click", closeForm);
   elements.form.addEventListener("submit", (event) => void submitForm(event));
   elements.runTest.addEventListener("click", runTest);

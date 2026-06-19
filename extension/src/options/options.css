@@ -45,6 +45,11 @@ section {
   justify-content: space-between;
 }
 
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
 h2 {
   margin: 0.25rem 0;
 }
