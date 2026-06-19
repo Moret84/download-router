@@ -1,4 +1,4 @@
-import type { MatchInput, Rule } from "./types";
+import type { DestinationContext, MatchInput, Rule } from "./types";
 
 function hostnameOf(url: string): string {
   try {
@@ -67,26 +67,58 @@ export function findMatchingRule(rules: Rule[], input: MatchInput): Rule | undef
     .find((rule) => ruleMatches(rule, input));
 }
 
-function basename(path: string): string {
+export function basename(path: string): string {
   const segments = path.replace(/\\/g, "/").split("/");
   return segments[segments.length - 1];
 }
 
-function normalizeFolder(destination: string): string {
+// Light cleanup only: leading "/" and "~" are preserved because destinations
+// are now absolute or home-relative paths. Path safety (traversal, allowlist)
+// is enforced by the native host, the real trust boundary.
+function cleanFolder(destination: string): string {
   return destination
     .replace(/\\/g, "/")
-    .split("/")
-    .map((segment) => segment.trim())
-    .filter((segment) => segment && segment !== "." && segment !== "..")
-    .join("/");
+    .replace(/\/{2,}/g, "/")
+    .replace(/\/+$/, "");
+}
+
+function fileExtension(filename: string): string {
+  const name = basename(filename);
+  const dot = name.lastIndexOf(".");
+  return dot > 0 ? name.slice(dot + 1).toLowerCase() : "";
+}
+
+function fileStem(filename: string): string {
+  const name = basename(filename);
+  const dot = name.lastIndexOf(".");
+  return dot > 0 ? name.slice(0, dot) : name;
+}
+
+function resolveVariables(template: string, context: DestinationContext): string {
+  const values: Record<string, string> = {
+    domain: hostnameOf(context.url),
+    filename: fileStem(context.filename),
+    extension: fileExtension(context.filename),
+    year: String(context.now.getFullYear()),
+    month: String(context.now.getMonth() + 1).padStart(2, "0"),
+  };
+  return template.replace(
+    /\{(domain|filename|extension|year|month)\}/g,
+    (_, key: string) => values[key] ?? "",
+  );
 }
 
 /**
- * Build a download path relative to the browser download directory by placing
- * the original file name inside the rule destination folder.
+ * Build the absolute destination path by placing the original file name inside
+ * the rule destination folder. The destination may be an absolute or
+ * home-relative ("~") path and may contain variables ({domain}, {filename},
+ * {extension}, {year}, {month}).
  */
-export function buildDestination(destination: string, filename: string): string {
-  const folder = normalizeFolder(destination);
-  const name = basename(filename);
+export function buildDestination(
+  destination: string,
+  context: DestinationContext,
+): string {
+  const folder = cleanFolder(resolveVariables(destination, context).trim());
+  const name = basename(context.filename);
   return folder ? `${folder}/${name}` : name;
 }

@@ -26,3 +26,9 @@ export interface MatchInput {
   filename: string;
   mimeType?: string;
 }
+
+export interface DestinationContext {
+  url: string;
+  filename: string;
+  now: Date;
+}
