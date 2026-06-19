@@ -1,0 +1,107 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  host:
+    name: Build host (${{ matrix.goos }}/${{ matrix.goarch }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { goos: linux, goarch: amd64 }
+          - { goos: linux, goarch: arm64 }
+          - { goos: darwin, goarch: amd64 }
+          - { goos: darwin, goarch: arm64 }
+          - { goos: windows, goarch: amd64 }
+          - { goos: windows, goarch: arm64 }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+          cache: false
+      - name: Build binary
+        working-directory: host
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: "0"
+        run: |
+          binname=download-router-host
+          [ "$GOOS" = "windows" ] && binname=download-router-host.exe
+          go build -trimpath -ldflags="-s -w" -o "$binname" .
+      - name: Package with installer
+        run: |
+          pkg="download-router-host-${{ matrix.goos }}-${{ matrix.goarch }}"
+          mkdir "$pkg"
+          cp installers/README.md "$pkg/"
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            cp host/download-router-host.exe "$pkg/"
+            cp installers/install.ps1 installers/uninstall.ps1 "$pkg/"
+            zip -r "$pkg.zip" "$pkg"
+          else
+            cp host/download-router-host "$pkg/"
+            cp installers/install.sh installers/uninstall.sh "$pkg/"
+            tar czf "$pkg.tar.gz" "$pkg"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: host-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: |
+            *.tar.gz
+            *.zip
+
+  extension:
+    name: Build and publish extension
+    runs-on: ubuntu-latest
+    env:
+      HAS_AMO_SECRETS: ${{ secrets.WEB_EXT_API_KEY != '' && secrets.WEB_EXT_API_SECRET != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: extension/package-lock.json
+      - working-directory: extension
+        run: |
+          npm ci
+          npm run build
+      - name: Package extension
+        working-directory: extension
+        run: npm run package
+      - name: Sign and submit to AMO
+        if: env.HAS_AMO_SECRETS == 'true'
+        working-directory: extension
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
+          WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}
+        run: npm run sign
+      - name: Note about AMO publish
+        if: env.HAS_AMO_SECRETS != 'true'
+        run: echo "WEB_EXT_API_KEY/WEB_EXT_API_SECRET not set; skipping AMO publish. Attaching the unsigned package only."
+      - uses: actions/upload-artifact@v4
+        with:
+          name: extension
+          path: extension/web-ext-artifacts/*
+
+  release:
+    name: Publish GitHub release
+    needs: [host, extension]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*
+          generate_release_notes: true

@@ -9,7 +9,8 @@
     "watch": "node build.ts --watch",
     "typecheck": "tsc --noEmit",
     "lint": "web-ext lint --source-dir dist",
-    "package": "web-ext build --source-dir dist --artifacts-dir web-ext-artifacts --overwrite-dest"
+    "package": "web-ext build --source-dir dist --artifacts-dir web-ext-artifacts --overwrite-dest",
+    "sign": "web-ext sign --source-dir dist --channel listed"
   },
   "devDependencies": {
     "@types/firefox-webext-browser": "^120.0.4",
