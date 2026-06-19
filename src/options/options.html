@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Download Router — Options</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Download Router</h1>
+      <p>Route downloads into subfolders of your Firefox download directory.</p>
+    </header>
+
+    <main>
+      <section id="rules-section">
+        <div class="section-header">
+          <h2>Rules</h2>
+          <button type="button" id="add-rule">Add rule</button>
+        </div>
+        <p class="hint">Rules are evaluated by priority (lowest first). The first match wins.</p>
+        <table id="rules-table">
+          <thead>
+            <tr>
+              <th>On</th>
+              <th>Name</th>
+              <th>Criteria</th>
+              <th>Destination</th>
+              <th>Order</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="rules-body"></tbody>
+        </table>
+        <p id="rules-empty" class="hint" hidden>No rules yet. Add one to start routing downloads.</p>
+      </section>
+
+      <section id="form-section" hidden>
+        <h2 id="form-title">Add rule</h2>
+        <form id="rule-form">
+          <input type="hidden" id="rule-id" />
+          <div class="field">
+            <label for="rule-name">Name</label>
+            <input type="text" id="rule-name" required placeholder="GitHub Releases" />
+          </div>
+          <div class="field checkbox">
+            <label><input type="checkbox" id="rule-enabled" checked /> Enabled</label>
+          </div>
+          <fieldset>
+            <legend>Criteria (all provided criteria must match)</legend>
+            <div class="field">
+              <label for="rule-domain">Domain</label>
+              <input type="text" id="rule-domain" placeholder="github.com" />
+            </div>
+            <div class="field">
+              <label for="rule-url-regex">URL (regex)</label>
+              <input type="text" id="rule-url-regex" placeholder="/releases/" />
+            </div>
+            <div class="field">
+              <label for="rule-filename-regex">Filename (regex)</label>
+              <input type="text" id="rule-filename-regex" placeholder="^invoice-" />
+            </div>
+            <div class="field">
+              <label for="rule-extension">Extension</label>
+              <input type="text" id="rule-extension" placeholder="jpg|jpeg|png" />
+            </div>
+            <div class="field">
+              <label for="rule-mime">MIME type</label>
+              <input type="text" id="rule-mime" placeholder="application/zip" />
+            </div>
+          </fieldset>
+          <div class="field">
+            <label for="rule-destination">Destination</label>
+            <input type="text" id="rule-destination" required placeholder="GitHub/Releases" />
+          </div>
+          <p id="form-error" class="error" hidden></p>
+          <div class="form-actions">
+            <button type="submit">Save</button>
+            <button type="button" id="cancel-form" class="secondary">Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="tester-section">
+        <h2>Rule tester</h2>
+        <div class="field">
+          <label for="test-url">URL</label>
+          <input
+            type="text"
+            id="test-url"
+            placeholder="https://github.com/foo/bar/releases/download/v1/app.zip"
+          />
+        </div>
+        <div class="field">
+          <label for="test-filename">Filename</label>
+          <input type="text" id="test-filename" placeholder="app.zip" />
+        </div>
+        <div class="field">
+          <label for="test-mime">MIME type</label>
+          <input type="text" id="test-mime" placeholder="application/zip" />
+        </div>
+        <button type="button" id="run-test">Test</button>
+        <div id="test-result" class="result" hidden></div>
+      </section>
+
+      <section id="history-section">
+        <div class="section-header">
+          <h2>History</h2>
+          <button type="button" id="clear-history" class="secondary">Clear</button>
+        </div>
+        <p class="hint">Last 100 routed downloads.</p>
+        <ul id="history-list"></ul>
+        <p id="history-empty" class="hint" hidden>No routed downloads yet.</p>
+      </section>
+    </main>
+
+    <script src="options.js"></script>
+  </body>
+</html>
