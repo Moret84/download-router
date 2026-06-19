@@ -27,31 +27,37 @@ according to the first matching rule.
 
 ## Build
 
+The extension lives in `extension/`; run its commands from there.
+
 ```sh
+cd extension
 npm install
-npm run build        # outputs the unpacked extension to dist/
+npm run build        # outputs the unpacked extension to extension/dist/
 npm run watch        # rebuild on change
 npm run typecheck    # type-check without emitting
 ```
 
 ## Load in Firefox
 
-1. Run `npm run build`.
+1. Run `npm run build` in `extension/`.
 2. Open `about:debugging#/runtime/this-firefox`.
-3. Click **Load Temporary Add-on…** and select `dist/manifest.json`.
+3. Click **Load Temporary Add-on…** and select `extension/dist/manifest.json`.
 
 ## Project layout
 
 ```
-src/
-  manifest.json        Manifest V3 (Firefox)
-  types.ts             Shared types (Rule, DownloadLog, MatchInput)
-  matcher.ts           Rule matching engine and destination building
-  storage.ts           browser.storage.local access and seeding
-  defaults.ts          Default rules
-  background.ts        onDeterminingFilename listener
-  options/             Options page (rules CRUD, tester, history)
-build.ts               esbuild bundling + static file copy
+extension/             Firefox add-on (TypeScript)
+  src/
+    manifest.json      Manifest V3 (Firefox)
+    types.ts           Shared types (Rule, DownloadLog, MatchInput)
+    matcher.ts         Rule matching engine and destination building
+    storage.ts         storage access (sync for rules, local for history)
+    defaults.ts        Default rules
+    background.ts      Download trigger and routing
+    options/           Options page (rules CRUD, tester, history)
+  build.ts             esbuild bundling + static file copy
+host/                  Native messaging helper (Go) that moves the file
+installers/            Per-OS installers for the native host
 ```
 
 ## License
