@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Download Router",
+  "version": "0.1.0",
+  "description": "Route downloads into subfolders based on user-defined rules, like email filters.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "download-router@bosscorp.fr",
+      "strict_min_version": "115.0"
+    }
+  },
+  "permissions": ["downloads", "storage"],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  }
+}
