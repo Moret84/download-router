@@ -37,6 +37,19 @@ func TestValidateDestinationOutsideRoot(t *testing.T) {
 	}
 }
 
+func TestValidateDestinationExpandsHome(t *testing.T) {
+	root := tempRoot(t)
+	t.Setenv("HOME", root)
+	got, err := validateDestination("~/PDF/file.txt", []string{root})
+	if err != nil {
+		t.Fatalf("expected ~ to expand and be allowed, got error: %v", err)
+	}
+	want := filepath.Join(root, "PDF", "file.txt")
+	if got != want {
+		t.Fatalf("expected %s, got %s", want, got)
+	}
+}
+
 func TestValidateDestinationRejectsTraversal(t *testing.T) {
 	root := tempRoot(t)
 	dest := filepath.Join(root, "..", "escape.txt")

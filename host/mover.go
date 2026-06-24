@@ -39,7 +39,10 @@ func validateDestination(destination string, allowedRoots []string) (string, err
 	if destination == "" {
 		return "", fmt.Errorf("empty destination")
 	}
-	abs, err := filepath.Abs(destination)
+	// The extension cannot know the user's home, so it sends "~" paths; the host
+	// expands them. filepath.Abs does not, and would otherwise create a literal
+	// "~" directory relative to the host's working directory.
+	abs, err := filepath.Abs(expandHome(destination))
 	if err != nil {
 		return "", err
 	}
