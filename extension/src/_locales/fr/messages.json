@@ -1,0 +1,65 @@
+{
+  "extensionName": { "message": "Download Router" },
+  "extensionDescription": {
+    "message": "Range les téléchargements dans des dossiers selon des règles, comme des filtres e-mail."
+  },
+
+  "optionsTitle": { "message": "Download Router — Options" },
+  "appSubtitle": { "message": "Range les téléchargements dans des dossiers selon vos règles." },
+
+  "rulesHeading": { "message": "Règles" },
+  "addRule": { "message": "Ajouter une règle" },
+  "export": { "message": "Exporter" },
+  "import": { "message": "Importer" },
+  "rulesHint": {
+    "message": "Les règles sont évaluées par priorité (la plus basse d'abord). La première qui correspond gagne."
+  },
+  "rulesEmpty": { "message": "Aucune règle pour l'instant. Ajoutez-en une pour router vos téléchargements." },
+
+  "colOn": { "message": "Actif" },
+  "colName": { "message": "Nom" },
+  "colCriteria": { "message": "Critères" },
+  "colDestination": { "message": "Destination" },
+  "colOrder": { "message": "Ordre" },
+  "colActions": { "message": "Actions" },
+
+  "criteriaAny": { "message": "correspond à tout" },
+  "edit": { "message": "Modifier" },
+  "delete": { "message": "Supprimer" },
+
+  "addRuleTitle": { "message": "Ajouter une règle" },
+  "editRuleTitle": { "message": "Modifier la règle" },
+  "labelName": { "message": "Nom" },
+  "labelEnabled": { "message": "Activée" },
+  "criteriaLegend": { "message": "Critères (tous les critères renseignés doivent correspondre)" },
+  "labelDomain": { "message": "Domaine" },
+  "labelUrlRegex": { "message": "URL (regex)" },
+  "labelFilenameRegex": { "message": "Nom de fichier (regex)" },
+  "labelExtension": { "message": "Extension" },
+  "labelMime": { "message": "Type MIME" },
+  "labelDestination": { "message": "Destination" },
+  "destinationHint": {
+    "message": "Chemin absolu ou ~. Variables : {domain} {filename} {extension} {year} {month} — ex. ~/Documents/Sites/{domain} ou ~/Downloads/Archives/{year}/{month}"
+  },
+  "save": { "message": "Enregistrer" },
+  "cancel": { "message": "Annuler" },
+  "formRequiredError": { "message": "Le nom et la destination sont obligatoires." },
+
+  "testerHeading": { "message": "Testeur de règles" },
+  "labelUrl": { "message": "URL" },
+  "labelFilename": { "message": "Nom de fichier" },
+  "runTest": { "message": "Tester" },
+  "testerNoMatch": {
+    "message": "Aucune règle ne correspond. Le téléchargement garde son emplacement par défaut."
+  },
+  "testerMatched": {
+    "message": "Règle correspondante : $RULE$",
+    "placeholders": { "rule": { "content": "$1" } }
+  },
+  "testerDestination": { "message": "Destination : " },
+
+  "historyHeading": { "message": "Historique" },
+  "clear": { "message": "Vider" },
+  "historyHint": { "message": "Les 100 derniers téléchargements routés." },
+  "historyEmpty": { "message": "Aucun téléchargement routé pour l'instant." }
+}

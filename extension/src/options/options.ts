@@ -49,6 +49,20 @@ const elements = {
   clearHistory: byId<HTMLButtonElement>("clear-history"),
 };
 
+function t(key: string, substitutions?: string | string[]): string {
+  return browser.i18n.getMessage(key, substitutions);
+}
+
+function localizeDom(): void {
+  document.title = t("optionsTitle");
+  document.querySelectorAll<HTMLElement>("[data-i18n]").forEach((element) => {
+    const key = element.dataset.i18n;
+    if (key) {
+      element.textContent = t(key);
+    }
+  });
+}
+
 let rules: Rule[] = [];
 
 function sortedByPriority(source: Rule[]): Rule[] {
@@ -62,7 +76,7 @@ function criteriaSummary(rule: Rule): string {
   if (rule.filenameRegex) parts.push(`filename: ${rule.filenameRegex}`);
   if (rule.extension) parts.push(`ext: ${rule.extension}`);
   if (rule.mimeType) parts.push(`mime: ${rule.mimeType}`);
-  return parts.length ? parts.join(" · ") : "matches everything";
+  return parts.length ? parts.join(" · ") : t("criteriaAny");
 }
 
 function renderRules(): void {
@@ -104,8 +118,8 @@ function renderRules(): void {
 
     const actionsCell = document.createElement("td");
     actionsCell.append(
-      createIconButton("Edit", () => openForm(rule)),
-      createIconButton("Delete", () => void deleteRule(rule.id)),
+      createIconButton(t("edit"), () => openForm(rule)),
+      createIconButton(t("delete"), () => void deleteRule(rule.id)),
     );
 
     row.append(
@@ -146,7 +160,7 @@ function createIconButton(label: string, onClick: () => void): HTMLButtonElement
 function openForm(rule?: Rule): void {
   elements.formError.hidden = true;
   elements.formSection.hidden = false;
-  elements.formTitle.textContent = rule ? "Edit rule" : "Add rule";
+  elements.formTitle.textContent = t(rule ? "editRuleTitle" : "addRuleTitle");
   elements.ruleId.value = rule?.id ?? "";
   elements.ruleName.value = rule?.name ?? "";
   elements.ruleEnabled.checked = rule?.enabled ?? true;
@@ -204,7 +218,7 @@ async function submitForm(event: SubmitEvent): Promise<void> {
   event.preventDefault();
   const rule = readRuleFromForm();
   if (!rule) {
-    elements.formError.textContent = "Name and destination are required.";
+    elements.formError.textContent = t("formRequiredError");
     elements.formError.hidden = false;
     return;
   }
@@ -267,7 +281,7 @@ function runTest(): void {
 
   if (!rule) {
     elements.testResult.className = "result no-match";
-    elements.testResult.textContent = "No rule matched. The download keeps its default location.";
+    elements.testResult.textContent = t("testerNoMatch");
     return;
   }
 
@@ -278,9 +292,9 @@ function runTest(): void {
   });
   elements.testResult.className = "result matched";
   const matched = document.createElement("div");
-  matched.textContent = `Matched rule: ${rule.name}`;
+  matched.textContent = t("testerMatched", rule.name);
   const target = document.createElement("div");
-  target.append(document.createTextNode("Destination: "));
+  target.append(document.createTextNode(t("testerDestination")));
   const code = document.createElement("code");
   code.textContent = destination;
   target.append(code);
@@ -349,6 +363,7 @@ function handleImportSelection(): void {
 }
 
 async function init(): Promise<void> {
+  localizeDom();
   await seedDefaultRulesIfEmpty();
   rules = await getRules();
   renderRules();

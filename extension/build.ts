@@ -19,10 +19,13 @@ const staticFiles: ReadonlyArray<readonly [string, string]> = [
   ["src/manifest.json", `${outdir}/manifest.json`],
   ["src/options/options.html", `${outdir}/options.html`],
   ["src/options/options.css", `${outdir}/options.css`],
+  ["src/_locales", `${outdir}/_locales`],
 ];
 
 async function copyStaticFiles(): Promise<void> {
-  await Promise.all(staticFiles.map(([from, to]) => cp(from, to)));
+  await Promise.all(
+    staticFiles.map(([from, to]) => cp(from, to, { recursive: true })),
+  );
 }
 
 async function prepareOutputDirectory(): Promise<void> {

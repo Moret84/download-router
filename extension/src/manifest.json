@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Download Router",
+  "name": "__MSG_extensionName__",
   "version": "0.1.0",
-  "description": "Route downloads into subfolders based on user-defined rules, like email filters.",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "en",
   "browser_specific_settings": {
     "gecko": {
       "id": "download-router@bosscorp.fr",

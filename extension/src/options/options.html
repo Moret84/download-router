@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,98 +9,103 @@
   <body>
     <header>
       <h1>Download Router</h1>
-      <p>Route downloads into subfolders of your Firefox download directory.</p>
+      <p data-i18n="appSubtitle">Route downloads into folders based on your rules.</p>
     </header>
 
     <main>
       <section id="rules-section">
         <div class="section-header">
-          <h2>Rules</h2>
+          <h2 data-i18n="rulesHeading">Rules</h2>
           <div class="header-actions">
-            <button type="button" id="add-rule">Add rule</button>
-            <button type="button" id="export-rules" class="secondary">Export</button>
-            <button type="button" id="import-rules" class="secondary">Import</button>
+            <button type="button" id="add-rule" data-i18n="addRule">Add rule</button>
+            <button type="button" id="export-rules" class="secondary" data-i18n="export">Export</button>
+            <button type="button" id="import-rules" class="secondary" data-i18n="import">Import</button>
             <input type="file" id="import-file" accept="application/json" hidden />
           </div>
         </div>
-        <p class="hint">Rules are evaluated by priority (lowest first). The first match wins.</p>
+        <p class="hint" data-i18n="rulesHint">
+          Rules are evaluated by priority (lowest first). The first match wins.
+        </p>
         <p id="import-error" class="error" hidden></p>
         <table id="rules-table">
           <thead>
             <tr>
-              <th>On</th>
-              <th>Name</th>
-              <th>Criteria</th>
-              <th>Destination</th>
-              <th>Order</th>
-              <th>Actions</th>
+              <th data-i18n="colOn">On</th>
+              <th data-i18n="colName">Name</th>
+              <th data-i18n="colCriteria">Criteria</th>
+              <th data-i18n="colDestination">Destination</th>
+              <th data-i18n="colOrder">Order</th>
+              <th data-i18n="colActions">Actions</th>
             </tr>
           </thead>
           <tbody id="rules-body"></tbody>
         </table>
-        <p id="rules-empty" class="hint" hidden>No rules yet. Add one to start routing downloads.</p>
+        <p id="rules-empty" class="hint" hidden data-i18n="rulesEmpty">
+          No rules yet. Add one to start routing downloads.
+        </p>
       </section>
 
       <section id="form-section" hidden>
-        <h2 id="form-title">Add rule</h2>
+        <h2 id="form-title" data-i18n="addRuleTitle">Add rule</h2>
         <form id="rule-form">
           <input type="hidden" id="rule-id" />
           <div class="field">
-            <label for="rule-name">Name</label>
+            <label for="rule-name" data-i18n="labelName">Name</label>
             <input type="text" id="rule-name" required placeholder="GitHub Releases" />
           </div>
           <div class="field checkbox">
-            <label><input type="checkbox" id="rule-enabled" checked /> Enabled</label>
+            <label>
+              <input type="checkbox" id="rule-enabled" checked />
+              <span data-i18n="labelEnabled">Enabled</span>
+            </label>
           </div>
           <fieldset>
-            <legend>Criteria (all provided criteria must match)</legend>
+            <legend data-i18n="criteriaLegend">Criteria (all provided criteria must match)</legend>
             <div class="field">
-              <label for="rule-domain">Domain</label>
+              <label for="rule-domain" data-i18n="labelDomain">Domain</label>
               <input type="text" id="rule-domain" placeholder="github.com" />
             </div>
             <div class="field">
-              <label for="rule-url-regex">URL (regex)</label>
+              <label for="rule-url-regex" data-i18n="labelUrlRegex">URL (regex)</label>
               <input type="text" id="rule-url-regex" placeholder="/releases/" />
             </div>
             <div class="field">
-              <label for="rule-filename-regex">Filename (regex)</label>
+              <label for="rule-filename-regex" data-i18n="labelFilenameRegex">Filename (regex)</label>
               <input type="text" id="rule-filename-regex" placeholder="^invoice-" />
             </div>
             <div class="field">
-              <label for="rule-extension">Extension</label>
+              <label for="rule-extension" data-i18n="labelExtension">Extension</label>
               <input type="text" id="rule-extension" placeholder="jpg|jpeg|png" />
             </div>
             <div class="field">
-              <label for="rule-mime">MIME type</label>
+              <label for="rule-mime" data-i18n="labelMime">MIME type</label>
               <input type="text" id="rule-mime" placeholder="application/zip" />
             </div>
           </fieldset>
           <div class="field">
-            <label for="rule-destination">Destination</label>
+            <label for="rule-destination" data-i18n="labelDestination">Destination</label>
             <input
               type="text"
               id="rule-destination"
               required
               placeholder="~/Downloads/GitHub/Releases"
             />
-            <span class="hint">
-              Absolute or ~ path. Variables: {domain} {filename} {extension}
-              {year} {month} — e.g. <code>~/Documents/Sites/{domain}</code> or
-              <code>~/Downloads/Archives/{year}/{month}</code>
+            <span class="hint" data-i18n="destinationHint">
+              Absolute or ~ path. Variables: {domain} {filename} {extension} {year} {month}
             </span>
           </div>
           <p id="form-error" class="error" hidden></p>
           <div class="form-actions">
-            <button type="submit">Save</button>
-            <button type="button" id="cancel-form" class="secondary">Cancel</button>
+            <button type="submit" data-i18n="save">Save</button>
+            <button type="button" id="cancel-form" class="secondary" data-i18n="cancel">Cancel</button>
           </div>
         </form>
       </section>
 
       <section id="tester-section">
-        <h2>Rule tester</h2>
+        <h2 data-i18n="testerHeading">Rule tester</h2>
         <div class="field">
-          <label for="test-url">URL</label>
+          <label for="test-url" data-i18n="labelUrl">URL</label>
           <input
             type="text"
             id="test-url"
@@ -108,25 +113,27 @@
           />
         </div>
         <div class="field">
-          <label for="test-filename">Filename</label>
+          <label for="test-filename" data-i18n="labelFilename">Filename</label>
           <input type="text" id="test-filename" placeholder="app.zip" />
         </div>
         <div class="field">
-          <label for="test-mime">MIME type</label>
+          <label for="test-mime" data-i18n="labelMime">MIME type</label>
           <input type="text" id="test-mime" placeholder="application/zip" />
         </div>
-        <button type="button" id="run-test">Test</button>
+        <button type="button" id="run-test" data-i18n="runTest">Test</button>
         <div id="test-result" class="result" hidden></div>
       </section>
 
       <section id="history-section">
         <div class="section-header">
-          <h2>History</h2>
-          <button type="button" id="clear-history" class="secondary">Clear</button>
+          <h2 data-i18n="historyHeading">History</h2>
+          <button type="button" id="clear-history" class="secondary" data-i18n="clear">Clear</button>
         </div>
-        <p class="hint">Last 100 routed downloads.</p>
+        <p class="hint" data-i18n="historyHint">Last 100 routed downloads.</p>
         <ul id="history-list"></ul>
-        <p id="history-empty" class="hint" hidden>No routed downloads yet.</p>
+        <p id="history-empty" class="hint" hidden data-i18n="historyEmpty">
+          No routed downloads yet.
+        </p>
       </section>
     </main>
 

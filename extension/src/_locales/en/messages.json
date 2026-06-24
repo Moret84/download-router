@@ -1,0 +1,65 @@
+{
+  "extensionName": { "message": "Download Router" },
+  "extensionDescription": {
+    "message": "Route downloads into folders based on user-defined rules, like email filters."
+  },
+
+  "optionsTitle": { "message": "Download Router — Options" },
+  "appSubtitle": { "message": "Route downloads into folders based on your rules." },
+
+  "rulesHeading": { "message": "Rules" },
+  "addRule": { "message": "Add rule" },
+  "export": { "message": "Export" },
+  "import": { "message": "Import" },
+  "rulesHint": {
+    "message": "Rules are evaluated by priority (lowest first). The first match wins."
+  },
+  "rulesEmpty": { "message": "No rules yet. Add one to start routing downloads." },
+
+  "colOn": { "message": "On" },
+  "colName": { "message": "Name" },
+  "colCriteria": { "message": "Criteria" },
+  "colDestination": { "message": "Destination" },
+  "colOrder": { "message": "Order" },
+  "colActions": { "message": "Actions" },
+
+  "criteriaAny": { "message": "matches everything" },
+  "edit": { "message": "Edit" },
+  "delete": { "message": "Delete" },
+
+  "addRuleTitle": { "message": "Add rule" },
+  "editRuleTitle": { "message": "Edit rule" },
+  "labelName": { "message": "Name" },
+  "labelEnabled": { "message": "Enabled" },
+  "criteriaLegend": { "message": "Criteria (all provided criteria must match)" },
+  "labelDomain": { "message": "Domain" },
+  "labelUrlRegex": { "message": "URL (regex)" },
+  "labelFilenameRegex": { "message": "Filename (regex)" },
+  "labelExtension": { "message": "Extension" },
+  "labelMime": { "message": "MIME type" },
+  "labelDestination": { "message": "Destination" },
+  "destinationHint": {
+    "message": "Absolute or ~ path. Variables: {domain} {filename} {extension} {year} {month} — e.g. ~/Documents/Sites/{domain} or ~/Downloads/Archives/{year}/{month}"
+  },
+  "save": { "message": "Save" },
+  "cancel": { "message": "Cancel" },
+  "formRequiredError": { "message": "Name and destination are required." },
+
+  "testerHeading": { "message": "Rule tester" },
+  "labelUrl": { "message": "URL" },
+  "labelFilename": { "message": "Filename" },
+  "runTest": { "message": "Test" },
+  "testerNoMatch": {
+    "message": "No rule matched. The download keeps its default location."
+  },
+  "testerMatched": {
+    "message": "Matched rule: $RULE$",
+    "placeholders": { "rule": { "content": "$1" } }
+  },
+  "testerDestination": { "message": "Destination: " },
+
+  "historyHeading": { "message": "History" },
+  "clear": { "message": "Clear" },
+  "historyHint": { "message": "Last 100 routed downloads." },
+  "historyEmpty": { "message": "No routed downloads yet." }
+}
