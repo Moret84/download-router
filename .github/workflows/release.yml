@@ -8,19 +8,13 @@ permissions:
   contents: write
 
 jobs:
-  host:
-    name: Build host (${{ matrix.goos }}/${{ matrix.goarch }})
+  linux:
+    name: Build host (linux/${{ matrix.goarch }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - { goos: linux, goarch: amd64 }
-          - { goos: linux, goarch: arm64 }
-          - { goos: darwin, goarch: amd64 }
-          - { goos: darwin, goarch: arm64 }
-          - { goos: windows, goarch: amd64 }
-          - { goos: windows, goarch: arm64 }
+        goarch: [amd64, arm64]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -30,33 +24,74 @@ jobs:
       - name: Build binary
         working-directory: host
         env:
-          GOOS: ${{ matrix.goos }}
+          GOOS: linux
           GOARCH: ${{ matrix.goarch }}
           CGO_ENABLED: "0"
+        run: go build -trimpath -ldflags="-s -w" -o download-router-host .
+      - name: Package tarball
         run: |
-          binname=download-router-host
-          [ "$GOOS" = "windows" ] && binname=download-router-host.exe
-          go build -trimpath -ldflags="-s -w" -o "$binname" .
-      - name: Package with installer
-        run: |
-          pkg="download-router-host-${{ matrix.goos }}-${{ matrix.goarch }}"
+          pkg="download-router-host-linux-${{ matrix.goarch }}"
           mkdir "$pkg"
-          cp installers/README.md "$pkg/"
-          if [ "${{ matrix.goos }}" = "windows" ]; then
-            cp host/download-router-host.exe "$pkg/"
-            cp installers/install.ps1 installers/uninstall.ps1 "$pkg/"
-            zip -r "$pkg.zip" "$pkg"
-          else
-            cp host/download-router-host "$pkg/"
-            cp installers/install.sh installers/uninstall.sh "$pkg/"
-            tar czf "$pkg.tar.gz" "$pkg"
-          fi
+          cp host/download-router-host installers/README.md "$pkg/"
+          tar czf "$pkg.tar.gz" "$pkg"
       - uses: actions/upload-artifact@v4
         with:
-          name: host-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: |
-            *.tar.gz
-            *.zip
+          name: linux-${{ matrix.goarch }}
+          path: "*.tar.gz"
+
+  macos:
+    name: Build macOS .pkg
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+          cache: false
+      - name: Build universal binary
+        working-directory: host
+        env:
+          CGO_ENABLED: "0"
+        run: |
+          GOOS=darwin GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o drh-amd64 .
+          GOOS=darwin GOARCH=arm64 go build -trimpath -ldflags="-s -w" -o drh-arm64 .
+          lipo -create -output download-router-host drh-amd64 drh-arm64
+      - name: Build .pkg
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          bash installers/macos/build-pkg.sh host/download-router-host "$version" "download-router-host-macos.pkg"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-pkg
+          path: "*.pkg"
+
+  windows:
+    name: Build Windows installer
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+          cache: false
+      - name: Build binary
+        working-directory: host
+        env:
+          GOOS: windows
+          GOARCH: amd64
+          CGO_ENABLED: "0"
+        run: go build -trimpath -ldflags="-s -w" -o download-router-host.exe .
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+      - name: Build installer
+        working-directory: installers/windows
+        run: |
+          $version = "${{ github.ref_name }}".TrimStart("v")
+          iscc /DAppVersion=$version /DBinary="..\..\host\download-router-host.exe" /F"download-router-host-setup-windows-amd64" download-router.iss
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: installers/windows/*.exe
 
   extension:
     name: Build and publish extension
@@ -94,7 +129,7 @@ jobs:
 
   release:
     name: Publish GitHub release
-    needs: [host, extension]
+    needs: [linux, macos, windows, extension]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4

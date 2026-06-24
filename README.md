@@ -64,18 +64,19 @@ npm run typecheck    # type-check without emitting
 
 ## Install the native host
 
-Build the helper and register it with Firefox (macOS/Linux):
+From a release, install the package for your OS (all unsigned, so the OS will
+warn): the `.pkg` on macOS, the setup `.exe` on Windows, or the Linux tarball.
+
+From source, build and register the helper directly:
 
 ```sh
-cd host && go build -o download-router-host . && cd ..
-installers/install.sh host/download-router-host
+cd host && go build -o download-router-host . && ./download-router-host install
 ```
 
-On Windows, use `installers\install.ps1`. The installer copies the binary,
-seeds a default `config.json` (allowed root: home) and writes the native
-messaging manifest. Edit `config.json` to restrict where downloads may be
-moved. See [installers/README.md](installers/README.md) for details and
-uninstall.
+The binary registers itself with Firefox and seeds a default `config.json`
+(allowed root: home) next to itself. Edit `config.json` to restrict where
+downloads may be moved. See [installers/README.md](installers/README.md) for
+per-OS details and uninstall.
 
 ## Project layout
 
