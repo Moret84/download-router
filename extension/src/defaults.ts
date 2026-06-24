@@ -5,7 +5,7 @@ export function createDefaultRules(): Rule[] {
     {
       id: crypto.randomUUID(),
       name: "GitHub Releases",
-      enabled: true,
+      enabled: false,
       priority: 10,
       domain: "github.com",
       urlRegex: "/releases/",
@@ -14,7 +14,7 @@ export function createDefaultRules(): Rule[] {
     {
       id: crypto.randomUUID(),
       name: "PDF",
-      enabled: true,
+      enabled: false,
       priority: 20,
       extension: "pdf",
       destination: "~/Downloads/PDF",
@@ -22,7 +22,7 @@ export function createDefaultRules(): Rule[] {
     {
       id: crypto.randomUUID(),
       name: "Images",
-      enabled: true,
+      enabled: false,
       priority: 30,
       extension: "jpg|jpeg|png|webp",
       destination: "~/Downloads/Images",
@@ -30,7 +30,7 @@ export function createDefaultRules(): Rule[] {
     {
       id: crypto.randomUUID(),
       name: "Archives",
-      enabled: true,
+      enabled: false,
       priority: 40,
       extension: "zip|tar.gz|7z",
       destination: "~/Downloads/Archives",
@@ -38,7 +38,7 @@ export function createDefaultRules(): Rule[] {
     {
       id: crypto.randomUUID(),
       name: "Installers",
-      enabled: true,
+      enabled: false,
       priority: 50,
       extension: "dmg|exe|msi|apk",
       destination: "~/Downloads/Installers",
