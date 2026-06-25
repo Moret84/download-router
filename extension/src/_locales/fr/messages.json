@@ -61,5 +61,15 @@
   "historyHeading": { "message": "Historique" },
   "clear": { "message": "Vider" },
   "historyHint": { "message": "Les 100 derniers téléchargements routés." },
-  "historyEmpty": { "message": "Aucun téléchargement routé pour l'instant." }
+  "historyEmpty": { "message": "Aucun téléchargement routé pour l'instant." },
+
+  "hostHeading": { "message": "Aide native" },
+  "hostConnected": {
+    "message": "Aide connectée (v$VERSION$).",
+    "placeholders": { "version": { "content": "$1" } }
+  },
+  "hostMissing": {
+    "message": "L'aide native n'est pas installée, les téléchargements ne seront pas déplacés."
+  },
+  "hostInstall": { "message": "Installer l'aide" }
 }

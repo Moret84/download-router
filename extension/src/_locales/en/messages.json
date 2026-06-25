@@ -61,5 +61,15 @@
   "historyHeading": { "message": "History" },
   "clear": { "message": "Clear" },
   "historyHint": { "message": "Last 100 routed downloads." },
-  "historyEmpty": { "message": "No routed downloads yet." }
+  "historyEmpty": { "message": "No routed downloads yet." },
+
+  "hostHeading": { "message": "Native helper" },
+  "hostConnected": {
+    "message": "Helper connected (v$VERSION$).",
+    "placeholders": { "version": { "content": "$1" } }
+  },
+  "hostMissing": {
+    "message": "The native helper is not installed, so downloads will not be moved."
+  },
+  "hostInstall": { "message": "Install the helper" }
 }

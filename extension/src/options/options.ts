@@ -9,6 +9,10 @@ import {
 } from "../storage";
 import type { DownloadLog, Rule } from "../types";
 
+const HOST_NAME = "download_router";
+// Where users get the native helper. Replace USER with the project's GitHub owner.
+const RELEASES_URL = "https://github.com/USER/download-router-firefox/releases";
+
 function byId<T extends HTMLElement>(id: string): T {
   const element = document.getElementById(id);
   if (!element) {
@@ -18,6 +22,9 @@ function byId<T extends HTMLElement>(id: string): T {
 }
 
 const elements = {
+  hostStatus: byId<HTMLParagraphElement>("host-status"),
+  hostInstall: byId<HTMLParagraphElement>("host-install"),
+  hostInstallLink: byId<HTMLAnchorElement>("host-install-link"),
   rulesBody: byId<HTMLTableSectionElement>("rules-body"),
   rulesEmpty: byId<HTMLParagraphElement>("rules-empty"),
   addRule: byId<HTMLButtonElement>("add-rule"),
@@ -117,9 +124,10 @@ function renderRules(): void {
     );
 
     const actionsCell = document.createElement("td");
+    actionsCell.className = "actions";
     actionsCell.append(
-      createIconButton(t("edit"), () => openForm(rule)),
-      createIconButton(t("delete"), () => void deleteRule(rule.id)),
+      createActionButton(t("edit"), "secondary", () => openForm(rule)),
+      createActionButton(t("delete"), "danger", () => void deleteRule(rule.id)),
     );
 
     row.append(
@@ -148,10 +156,14 @@ function createOrderButton(
   return button;
 }
 
-function createIconButton(label: string, onClick: () => void): HTMLButtonElement {
+function createActionButton(
+  label: string,
+  variant: "secondary" | "danger",
+  onClick: () => void,
+): HTMLButtonElement {
   const button = document.createElement("button");
   button.type = "button";
-  button.className = "icon";
+  button.className = `action ${variant}`;
   button.textContent = label;
   button.addEventListener("click", onClick);
   return button;
@@ -362,8 +374,33 @@ function handleImportSelection(): void {
   elements.importFile.value = "";
 }
 
+interface PingResponse {
+  ok?: boolean;
+  version?: string;
+}
+
+async function checkHost(): Promise<void> {
+  elements.hostInstallLink.href = RELEASES_URL;
+  try {
+    const response = (await browser.runtime.sendNativeMessage(HOST_NAME, {
+      type: "ping",
+    })) as PingResponse;
+    if (!response?.ok) {
+      throw new Error("native host did not acknowledge");
+    }
+    elements.hostStatus.textContent = t("hostConnected", response.version ?? "?");
+    elements.hostStatus.className = "host-ok";
+    elements.hostInstall.hidden = true;
+  } catch {
+    elements.hostStatus.textContent = t("hostMissing");
+    elements.hostStatus.className = "host-missing";
+    elements.hostInstall.hidden = false;
+  }
+}
+
 async function init(): Promise<void> {
   localizeDom();
+  void checkHost();
   await seedDefaultRulesIfEmpty();
   rules = await getRules();
   renderRules();

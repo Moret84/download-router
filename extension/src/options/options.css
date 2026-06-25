@@ -116,6 +116,30 @@ button.icon {
   padding: 0.2rem 0.4rem;
 }
 
+td.actions {
+  white-space: nowrap;
+}
+
+.host-ok {
+  color: #178a3a;
+}
+
+.host-missing {
+  color: var(--error);
+  font-weight: 600;
+}
+
+button.action {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.7rem;
+  margin-right: 0.35rem;
+}
+
+button.danger {
+  background: #fbeaea;
+  color: var(--error);
+}
+
 button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
