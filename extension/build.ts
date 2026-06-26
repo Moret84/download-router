@@ -20,6 +20,7 @@ const staticFiles: ReadonlyArray<readonly [string, string]> = [
   ["src/options/options.html", `${outdir}/options.html`],
   ["src/options/options.css", `${outdir}/options.css`],
   ["src/_locales", `${outdir}/_locales`],
+  ["src/icon.svg", `${outdir}/icon.svg`],
 ];
 
 async function copyStaticFiles(): Promise<void> {

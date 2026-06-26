@@ -4,6 +4,11 @@
   "version": "0.1.0",
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
+  "icons": {
+    "48": "icon.svg",
+    "96": "icon.svg",
+    "128": "icon.svg"
+  },
   "browser_specific_settings": {
     "gecko": {
       "id": "download-router@bosscorp.fr",
