@@ -10,8 +10,8 @@ import {
 import type { DownloadLog, Rule } from "../types";
 
 const HOST_NAME = "download_router";
-// Where users get the native helper. Replace USER with the project's GitHub owner.
-const RELEASES_URL = "https://github.com/USER/download-router-firefox/releases";
+// Where users get the native helper (GitHub releases).
+const RELEASES_URL = "https://github.com/Moret84/download-router/releases";
 
 function byId<T extends HTMLElement>(id: string): T {
   const element = document.getElementById(id);

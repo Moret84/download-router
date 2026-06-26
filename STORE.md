@@ -92,5 +92,4 @@ Productivity / Download Management
 
 ## Support
 
-Project repository and issues: https://github.com/USER/download-router-firefox
-(replace USER with the project's GitHub owner).
+Project repository and issues: https://github.com/Moret84/download-router
