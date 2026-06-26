@@ -14,6 +14,6 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Check rebase-only history
-        uses: moret84/gh-actions/ensure-branch-rebased@v1
+        uses: Moret84/gh-actions/ensure-branch-rebased@v1
         with:
           base-ref: ${{ github.base_ref }}
