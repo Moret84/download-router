@@ -39,7 +39,9 @@ func TestValidateDestinationOutsideRoot(t *testing.T) {
 
 func TestValidateDestinationExpandsHome(t *testing.T) {
 	root := tempRoot(t)
+	// os.UserHomeDir reads HOME on Unix and USERPROFILE on Windows.
 	t.Setenv("HOME", root)
+	t.Setenv("USERPROFILE", root)
 	got, err := validateDestination("~/PDF/file.txt", []string{root})
 	if err != nil {
 		t.Fatalf("expected ~ to expand and be allowed, got error: %v", err)
