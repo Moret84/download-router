@@ -7,6 +7,8 @@ Firefox natively offers only a single fixed download folder or an "ask every
 time" prompt. This project organizes downloads by user-defined rules, the way
 email filters sort mail.
 
+> This project was written with substantial help from an AI coding assistant.
+
 ## How routing works
 
 Firefox has no `downloads.onDeterminingFilename` (a Chrome-only API) and an
@@ -17,7 +19,7 @@ asks a small **native helper** to move the file to the rule's destination.
 This has two consequences:
 
 - A native messaging host (a tiny Go program) must be installed separately; the
-  extension alone cannot move files. See [Install the native host](#install-the-native-host).
+  extension alone cannot move files. See [Installation](#installation).
 - The file is moved after completion, so Firefox's own download panel entry
   still points at the original location.
 
@@ -40,11 +42,40 @@ target any path allowed by the host's allowlist.
 
 ## Requirements
 
-- Node.js 24+ (the build script is TypeScript, run natively by Node).
-- Go 1.23+ (to build the native host).
 - Firefox 115+.
+- To build from source: Node.js 24+ (the build script is TypeScript, run
+  natively by Node) and Go 1.23+ (for the native host).
 
-## Build
+## Installation
+
+Download Router has two parts and you need both: the **extension** and the
+**native host**. Grab them from the
+[latest release](https://github.com/Moret84/download-router/releases/latest).
+
+### 1. Native host
+
+Install the package for your OS (all unsigned, so the OS will warn): the `.pkg`
+on macOS, the setup `.exe` on Windows, or the Linux tarball. It registers itself
+with Firefox and seeds a default `config.json` (allowed root: home) next to
+itself. Edit `config.json` to restrict where downloads may be moved. See
+[installers/README.md](installers/README.md) for per-OS details and uninstall.
+
+### 2. Extension
+
+The extension is not on [addons.mozilla.org](https://addons.mozilla.org) (AMO)
+yet, so the release ships an **unsigned** package. Stable Firefox refuses to
+install unsigned extensions permanently, so for now:
+
+- **Firefox Developer Edition, Nightly or ESR**: set
+  `xpinstall.signatures.required` to `false` in `about:config`, then install the
+  package from the release.
+- **Any Firefox**: load it temporarily (see [Development](#development)); it
+  stays until you restart the browser.
+
+Once the extension is published to AMO, this step will become a one-click,
+auto-updating install.
+
+## Development
 
 The extension lives in `extension/`; run its commands from there.
 
@@ -56,27 +87,17 @@ npm run watch        # rebuild on change
 npm run typecheck    # type-check without emitting
 ```
 
-## Load in Firefox
+Load the built extension temporarily in Firefox:
 
 1. Run `npm run build` in `extension/`.
 2. Open `about:debugging#/runtime/this-firefox`.
 3. Click **Load Temporary Add-on…** and select `extension/dist/manifest.json`.
 
-## Install the native host
-
-From a release, install the package for your OS (all unsigned, so the OS will
-warn): the `.pkg` on macOS, the setup `.exe` on Windows, or the Linux tarball.
-
-From source, build and register the helper directly:
+Build and register the native host from source:
 
 ```sh
 cd host && go build -o download-router-host . && ./download-router-host install
 ```
-
-The binary registers itself with Firefox and seeds a default `config.json`
-(allowed root: home) next to itself. Edit `config.json` to restrict where
-downloads may be moved. See [installers/README.md](installers/README.md) for
-per-OS details and uninstall.
 
 ## Project layout
 
