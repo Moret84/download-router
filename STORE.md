@@ -90,6 +90,18 @@ and there is no tracking or analytics.
 
 Productivity / Download Management
 
+## Screenshots (to capture)
+
+Optional for submission, recommended for the listing. Capture them from the
+Options page running in Firefox and upload them on the AMO dashboard (not via
+the API). AMO recommends 1280x800 PNG.
+
+- [ ] Rules list, with one or two enabled rules.
+- [ ] Rule editor: criteria plus a destination using variables
+      (e.g. `~/Documents/Sites/{domain}`).
+- [ ] Rule tester previewing the matched rule and resulting destination.
+- [ ] Native-host status banner showing "connected".
+
 ## Support
 
 Project repository and issues: https://github.com/Moret84/download-router
