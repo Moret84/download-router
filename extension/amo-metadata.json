@@ -1,5 +1,12 @@
 {
   "version": {
     "license": "MIT"
+  },
+  "categories": {
+    "firefox": ["download-management"]
+  },
+  "summary": {
+    "en-US": "Route your downloads into any folder automatically, like email filters. Match by domain, URL, filename, extension or MIME type. Requires a small open-source helper (one-click install, runs only while a download is routed).",
+    "fr": "Range automatiquement tes téléchargements dans n'importe quel dossier, comme des filtres e-mail. Critères : domaine, URL, nom, extension, type MIME. Nécessite un petit helper open-source (installation en un clic)."
   }
 }
